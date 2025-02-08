@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.naming.AuthenticationException;
 import java.util.List;
 
-@RestController("/api/tasks")
+@RestController
+@RequestMapping("/api/tasks")
 public class TaskControllerImpl implements ITaskController {
 
     @Autowired
