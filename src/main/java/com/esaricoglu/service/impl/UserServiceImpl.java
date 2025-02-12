@@ -7,6 +7,7 @@ import com.esaricoglu.repository.UserRepository;
 import com.esaricoglu.service.IUserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Override
     public DtoUser getUserDetails(User currentUser) {
         return modelMapper.map(currentUser, DtoUser.class);
@@ -25,6 +29,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public DtoUser update(DtoUserIU dtoUserIU, User currentUser) {
+        dtoUserIU.setPassword(bCryptPasswordEncoder.encode(dtoUserIU.getPassword()));
         User updatedUser = modelMapper.map(dtoUserIU, User.class);
         updatedUser.setId(currentUser.getId());
         userRepository.save(updatedUser);
