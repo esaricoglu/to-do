@@ -24,7 +24,7 @@ public class UserControllerImpl implements IUserController {
     }
 
     @Override
-    @PostMapping("/update")
+    @PutMapping("/update")
     public RootEntity<DtoUser> update(@RequestBody DtoUserIU dtoUserIU, @AuthenticationPrincipal User currentUser) {
         return RootEntity.ok(userService.update(dtoUserIU, currentUser));
     }
