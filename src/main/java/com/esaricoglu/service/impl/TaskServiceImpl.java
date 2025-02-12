@@ -1,5 +1,6 @@
 package com.esaricoglu.service.impl;
 
+import com.esaricoglu.core.mapper.IModelMapper;
 import com.esaricoglu.dto.DtoTask;
 import com.esaricoglu.dto.DtoTaskIU;
 import com.esaricoglu.model.Task;
@@ -7,7 +8,6 @@ import com.esaricoglu.model.User;
 import com.esaricoglu.repository.TaskRepository;
 import com.esaricoglu.service.ITaskService;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +22,14 @@ public class TaskServiceImpl implements ITaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private IModelMapper modelMapper;
 
     @Override
     public List<DtoTask> getAll(User currentUser) {
         List<Task> tasks = taskRepository.findByUserId(currentUser.getId());
         List<DtoTask> dtoTasks = new ArrayList<>();
         for (Task task : tasks) {
-            DtoTask dtoTask = modelMapper.map(task, DtoTask.class);
+            DtoTask dtoTask = modelMapper.forResponse().map(task, DtoTask.class);
             dtoTasks.add(dtoTask);
         }
         return dtoTasks;
@@ -43,17 +43,17 @@ public class TaskServiceImpl implements ITaskService {
             throw new AuthenticationException("You are not allowed to read this task");
         }
 
-        return modelMapper.map(existingTask, DtoTask.class);
+        return modelMapper.forResponse().map(existingTask, DtoTask.class);
     }
 
     @Override
     public DtoTask save(DtoTaskIU dtoTaskIU, User currentUser) {
-        Task task = modelMapper.map(dtoTaskIU, Task.class);
+        Task task = modelMapper.forRequest().map(dtoTaskIU, Task.class);
         task.setUser(currentUser);
 
         taskRepository.save(task);
 
-        return modelMapper.map(task, DtoTask.class);
+        return modelMapper.forResponse().map(task, DtoTask.class);
     }
 
     @Override
@@ -77,11 +77,11 @@ public class TaskServiceImpl implements ITaskService {
             throw new AuthenticationException("You are not allowed to edit this task");
         }
 
-        modelMapper.map(dtoTaskIU, task);
+        modelMapper.forRequest().map(dtoTaskIU, task);
 
         taskRepository.save(task);
 
-        return modelMapper.map(task, DtoTask.class);
+        return modelMapper.forResponse().map(task, DtoTask.class);
     }
 
     @Override
@@ -100,6 +100,6 @@ public class TaskServiceImpl implements ITaskService {
 
         Task updatedTask = taskRepository.save(task);
 
-        return modelMapper.map(updatedTask, DtoTask.class);
+        return modelMapper.forResponse().map(updatedTask, DtoTask.class);
     }
 }

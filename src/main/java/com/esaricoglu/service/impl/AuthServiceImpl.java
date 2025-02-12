@@ -1,5 +1,6 @@
 package com.esaricoglu.service.impl;
 
+import com.esaricoglu.core.mapper.IModelMapper;
 import com.esaricoglu.dto.DtoUser;
 import com.esaricoglu.jwt.JwtService;
 import com.esaricoglu.jwt.LoginRequest;
@@ -27,7 +28,7 @@ public class AuthServiceImpl implements IAuthService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private IModelMapper modelMapper;
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
@@ -37,12 +38,12 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public DtoUser register(RegisterRequest request) {
-        User user = modelMapper.map(request, User.class);
+        User user = modelMapper.forRequest().map(request, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
 
-        return modelMapper.map(user, DtoUser.class);
+        return modelMapper.forResponse().map(user, DtoUser.class);
     }
 
     @Override
