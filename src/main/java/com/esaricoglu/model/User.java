@@ -1,6 +1,8 @@
 package com.esaricoglu.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,12 +19,15 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true, nullable = false, name = "username")
+    @Size(min = 8, max = 20)
     private String username;
 
     @Column(name = "password", nullable = false)
+    @Size(min = 8, max = 20)
     private String password;
 
     @Column(unique = true, nullable = false, name = "email")
+    @Email
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
