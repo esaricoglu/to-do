@@ -4,14 +4,14 @@ public class RootEntity<T> {
 
     private boolean result;
 
-    private String errorMessage;
+    private T errorMessage;
 
     private T data;
 
     public RootEntity() {
     }
 
-    public RootEntity(boolean result, String errorMessage, T data) {
+    public RootEntity(boolean result, T errorMessage, T data) {
         this.result = result;
         this.errorMessage = errorMessage;
         this.data = data;
@@ -27,7 +27,7 @@ public class RootEntity<T> {
         return rootEntity;
     }
 
-    public static <T> RootEntity<T> fail(String errorMessage) {
+    public static <T> RootEntity<T> fail(T errorMessage) {
         RootEntity<T> rootEntity = new RootEntity<>();
 
         rootEntity.result = false;
@@ -45,11 +45,11 @@ public class RootEntity<T> {
         this.result = result;
     }
 
-    public String getErrorMessage() {
+    public T getErrorMessage() {
         return errorMessage;
     }
 
-    public void setErrorMessage(String errorMessage) {
+    public void setErrorMessage(T errorMessage) {
         this.errorMessage = errorMessage;
     }
 
